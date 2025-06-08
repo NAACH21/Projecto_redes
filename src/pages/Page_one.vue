@@ -1,9 +1,8 @@
 <template>
   <!-- Chicos en la  parte de template se hace todo lo que es html -->
   <div>
-    <h1>Aqui se hace la pregunta 1</h1>
+    <h1>Aqui se hace la pregunta 1chatos</h1>
   </div>
-
 </template>
 
 <style>
@@ -15,5 +14,4 @@
 export default {
   name: "PageOne",
 };
-
 </script>
