@@ -1,27 +1,42 @@
 <template>
   <div class="container">
-    <h1>Conversor de direcciones IP</h1>
-    <p>Convierte fácilmente direcciones IPv4 a IPv6 y viceversa.</p>
+    <h1 class="title">Conversor de Direcciones IP</h1>
+    <p class="subtitle">
+      Convierte entre formatos IPv4 e IPv6 de manera sencilla
+    </p>
 
     <div class="form-group">
-      <label for="ip-input">Ingresa la dirección IP:</label>
       <input
         id="ip-input"
+        class="input"
         type="text"
         v-model="ipInput"
         placeholder="Ejemplo: 192.168.0.1 o ::1"
       />
+      <p class="helper-text">Ingresa una dirección IPv4 o IPv6 válida</p>
     </div>
 
     <div class="buttons">
-      <button @click="convertToIPv6">Convertir a IPv6</button>
-      <button @click="convertToIPv4">Convertir a IPv4</button>
+      <button class="button ipv6" @click="convertToIPv6">
+        Convertir a IPv6
+      </button>
+      <button class="button ipv4" @click="convertToIPv4">
+        Convertir a IPv4
+      </button>
     </div>
 
-    <div class="result" v-if="conversionResult">
-      <h3>Resultado:</h3>
-      <p>{{ conversionResult }}</p>
-    </div>
+    <transition name="fade">
+      <div v-if="errorMessage" class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+    </transition>
+
+    <transition name="fade">
+      <div v-if="conversionResult" class="alert alert-success">
+        <h3>Resultado:</h3>
+        <p>{{ conversionResult }}</p>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -31,19 +46,19 @@
   margin: 50px auto;
   padding: 20px;
   text-align: center;
-  border: 1px solid #ddd;
   border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-h1 {
-  font-size: 2rem;
-  color: #333;
+.title {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 10px;
 }
 
-p {
-  color: #555;
+.subtitle {
+  color: #fcefe8;
   margin-bottom: 20px;
 }
 
@@ -51,91 +66,140 @@ p {
   margin-bottom: 20px;
 }
 
-input {
+.input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
   font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.helper-text {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #fff;
 }
 
 .buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-top: 20px;
 }
 
-button {
+.button {
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  font-size: 1rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.button.ipv6 {
+  background-color: #4caf50;
+}
+
+.button.ipv6:hover {
+  background-color: #388e3c;
+}
+
+.button.ipv4 {
+  background-color: #2196f3;
+}
+
+.button.ipv4:hover {
+  background-color: #1976d2;
+}
+
+.alert {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 5px;
   font-size: 1rem;
 }
 
-button:hover {
-  background-color: #0056b3;
+.alert-success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #4caf50;
 }
 
-.result {
-  margin-top: 30px;
-  padding: 15px;
-  background-color: #e8f5e9;
-  border: 1px solid #4caf50;
-  border-radius: 5px;
-  color: #2e7d32;
+.alert-error {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #f44336;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
 
 <script>
 export default {
-  name: "PageOne",
+  name: "IPConverter",
   data() {
     return {
       ipInput: "",
       conversionResult: "",
+      errorMessage: "",
     };
   },
   methods: {
+    validateIPv4(ip) {
+      const parts = ip.split(".");
+      return (
+        parts.length === 4 &&
+        parts.every((part) => !isNaN(part) && +part >= 0 && +part <= 255)
+      );
+    },
+    validateIPv6(ip) {
+      return (
+        /^([0-9a-f]{1,4}:){1,7}[0-9a-f]{1,4}$/i.test(ip) ||
+        /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i.test(ip)
+      );
+    },
     convertToIPv6() {
-      try {
-        const parts = this.ipInput.split(".");
-        if (
-          parts.length !== 4 ||
-          parts.some((part) => isNaN(part) || part < 0 || part > 255)
-        ) {
-          throw new Error("Dirección IPv4 inválida");
-        }
-
-        const ipv6 = parts
-          .map((part) => parseInt(part).toString(16).padStart(2, "0"))
-          .join("")
-          .match(/.{1,4}/g)
-          .join(":");
-
-        this.conversionResult = `::ffff:${ipv6}`;
-      } catch (error) {
-        this.conversionResult = error.message;
+      this.clearMessages();
+      if (!this.validateIPv4(this.ipInput)) {
+        this.errorMessage = "Por favor, ingresa una dirección IPv4 válida.";
+        return;
       }
+      const parts = this.ipInput
+        .split(".")
+        .map((part) => parseInt(part).toString(16).padStart(2, "0"));
+      const ipv6 = `::ffff:${parts[0]}${parts[1]}:${parts[2]}${parts[3]}`;
+      this.conversionResult = ipv6;
     },
     convertToIPv4() {
-      try {
-        const match = this.ipInput.match(
-          /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i
-        );
-        if (!match) throw new Error("Dirección IPv6 inválida");
-
-        const ipv4 = match
-          .slice(1)
-          .map((part) => parseInt(part, 16))
-          .join(".");
-
-        this.conversionResult = ipv4;
-      } catch (error) {
-        this.conversionResult = error.message;
+      this.clearMessages();
+      if (!this.validateIPv6(this.ipInput)) {
+        this.errorMessage = "Por favor, ingresa una dirección IPv6 válida.";
+        return;
       }
+      const match = this.ipInput.match(
+        /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i
+      );
+      if (!match) {
+        this.errorMessage = "Formato de IPv6 no convertible a IPv4.";
+        return;
+      }
+      const ipv4 = match
+        .slice(1)
+        .map((part) => parseInt(part, 16))
+        .join(".");
+      this.conversionResult = ipv4;
+    },
+    clearMessages() {
+      this.conversionResult = "";
+      this.errorMessage = "";
     },
   },
 };
