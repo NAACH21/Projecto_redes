@@ -179,7 +179,7 @@ export default {
         return {
           valid: false,
           error:
-            "Formato inválido. Comprueba los bloques y los separadores (:)",
+            "Formato inválido. Comprueba los bloques y los separadores (:).",
         };
       }
       return { valid: true };
@@ -204,13 +204,16 @@ export default {
         this.errorMessage = validation.error;
         return;
       }
+
       const match = this.ipInput.match(
-        /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i
+        /^::ffff:([0-9a-f]{2})([0-9a-f]{2}):([0-9a-f]{2})([0-9a-f]{2})$/i
       );
       if (!match) {
-        this.errorMessage = "Formato de IPv6 no convertible a IPv4.";
+        this.errorMessage =
+          "Formato de IPv6 no convertible a IPv4 o dirección inválida.";
         return;
       }
+
       const ipv4 = match
         .slice(1)
         .map((part) => parseInt(part, 16))
