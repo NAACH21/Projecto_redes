@@ -1,9 +1,7 @@
 <template>
   <div class="container">
     <h1 class="title">Conversor de Direcciones IP</h1>
-    <p class="subtitle">
-      Convierte entre formatos IPv4 e IPv6 de manera sencilla
-    </p>
+    <p class="subtitle">Transforma IPv4 a IPv6 y viceversa fácilmente</p>
 
     <div class="form-group">
       <input
@@ -11,9 +9,9 @@
         class="input"
         type="text"
         v-model="ipInput"
-        placeholder="Ejemplo: 192.168.0.1 o ::1"
+        placeholder="Ingresa una dirección IPv4 o IPv6"
       />
-      <p class="helper-text">Ingresa una dirección IPv4 o IPv6 válida</p>
+      <p class="helper-text">Ejemplo: 192.168.0.1 o ::1</p>
     </div>
 
     <div class="buttons">
@@ -41,14 +39,17 @@
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
 .container {
-  max-width: 600px;
+  max-width: 700px;
   margin: 50px auto;
-  padding: 20px;
+  padding: 30px;
   text-align: center;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  font-family: "Roboto", sans-serif;
 }
 
 .title {
@@ -58,8 +59,8 @@
 }
 
 .subtitle {
-  color: #fcefe8;
-  margin-bottom: 20px;
+  color: #f0f0f0;
+  margin-bottom: 25px;
 }
 
 .form-group {
@@ -68,68 +69,69 @@
 
 .input {
   width: 100%;
-  padding: 12px;
+  padding: 15px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 .helper-text {
   margin-top: 5px;
   font-size: 0.9rem;
-  color: #fff;
+  color: #f0f0f0;
 }
 
 .buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 20px;
 }
 
 .button {
-  padding: 10px 20px;
+  padding: 15px 25px;
   font-size: 1rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   color: #fff;
   transition: all 0.3s ease;
 }
 
 .button.ipv6 {
-  background-color: #4caf50;
+  background-color: #34d399;
 }
 
 .button.ipv6:hover {
-  background-color: #388e3c;
+  background-color: #059669;
 }
 
 .button.ipv4 {
-  background-color: #2196f3;
+  background-color: #60a5fa;
 }
 
 .button.ipv4:hover {
-  background-color: #1976d2;
+  background-color: #2563eb;
 }
 
 .alert {
   margin-top: 20px;
   padding: 15px;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 1rem;
 }
 
 .alert-success {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  border: 1px solid #4caf50;
+  background-color: #e6fffa;
+  color: #065f46;
+  border: 1px solid #34d399;
 }
 
 .alert-error {
-  background-color: #ffebee;
-  color: #d32f2f;
-  border: 1px solid #f44336;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #f87171;
 }
 
 .fade-enter-active,
@@ -155,21 +157,38 @@ export default {
   methods: {
     validateIPv4(ip) {
       const parts = ip.split(".");
-      return (
-        parts.length === 4 &&
-        parts.every((part) => !isNaN(part) && +part >= 0 && +part <= 255)
-      );
+      if (parts.length !== 4)
+        return {
+          valid: false,
+          error: "Debe contener 4 bloques separados por puntos.",
+        };
+      for (let i = 0; i < parts.length; i++) {
+        if (isNaN(parts[i]) || parts[i] < 0 || parts[i] > 255) {
+          return {
+            valid: false,
+            error: `El bloque ${i + 1} (${parts[i]}) es inválido.`,
+          };
+        }
+      }
+      return { valid: true };
     },
     validateIPv6(ip) {
-      return (
-        /^([0-9a-f]{1,4}:){1,7}[0-9a-f]{1,4}$/i.test(ip) ||
-        /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i.test(ip)
-      );
+      const pattern =
+        /^([0-9a-f]{1,4}:){1,7}[0-9a-f]{1,4}$|^::(?:[0-9a-f]{1,4}:){0,5}[0-9a-f]{1,4}$|^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i;
+      if (!pattern.test(ip)) {
+        return {
+          valid: false,
+          error:
+            "Formato inválido. Comprueba los bloques y los separadores (:)",
+        };
+      }
+      return { valid: true };
     },
     convertToIPv6() {
       this.clearMessages();
-      if (!this.validateIPv4(this.ipInput)) {
-        this.errorMessage = "Por favor, ingresa una dirección IPv4 válida.";
+      const validation = this.validateIPv4(this.ipInput);
+      if (!validation.valid) {
+        this.errorMessage = validation.error;
         return;
       }
       const parts = this.ipInput
@@ -180,8 +199,9 @@ export default {
     },
     convertToIPv4() {
       this.clearMessages();
-      if (!this.validateIPv6(this.ipInput)) {
-        this.errorMessage = "Por favor, ingresa una dirección IPv6 válida.";
+      const validation = this.validateIPv6(this.ipInput);
+      if (!validation.valid) {
+        this.errorMessage = validation.error;
         return;
       }
       const match = this.ipInput.match(
