@@ -36,9 +36,141 @@
     <q-page-container>
       <q-page class="q-pa-md">
         <div v-if="activePanel === 'panel1'">
-          <h6>Panel 1</h6>
-          <p>Este es el contenido del primer panel.</p>
+          <!-- Titulo bonito -->
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              margin-bottom: 20px;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              width="32"
+              height="32"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 10h4l3 9 4-18 3 9h4"
+              />
+            </svg>
+            <h1 style="font-size: 1.5rem; font-weight: bold">
+              Calculadora de Subredes Básica
+            </h1>
+          </div>
+
+          <!-- Card del formulario -->
+          <div
+            style="
+              background-color: #fff;
+              border: 1px solid #d1d5db;
+              border-radius: 8px;
+              padding: 16px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+              max-width: 900px;
+              margin: auto;
+            "
+          >
+            <!-- Primera fila: inputs -->
+            <div style="display: flex; gap: 12px; margin-bottom: 16px">
+              <div style="flex: 1">
+                <label>Dirección IP:</label>
+                <input
+                  id="ipBasePanel1"
+                  type="text"
+                  placeholder="192.168.1.0"
+                  style="
+                    width: 100%;
+                    padding: 8px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                  "
+                />
+              </div>
+              <div style="flex: 1">
+                <label>Máscara CIDR:</label>
+                <input
+                  id="maskPanel1"
+                  type="number"
+                  min="1"
+                  max="30"
+                  placeholder="24"
+                  style="
+                    width: 100%;
+                    padding: 8px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                  "
+                />
+              </div>
+              <div style="flex: 1">
+                <label>Número de Subredes:</label>
+                <input
+                  id="numSubnetsPanel1"
+                  type="number"
+                  min="1"
+                  max="20"
+                  placeholder="4"
+                  style="
+                    width: 100%;
+                    padding: 8px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                  "
+                />
+              </div>
+            </div>
+
+            <!-- Segunda fila: botones -->
+            <div style="display: flex; gap: 12px; margin-bottom: 16px">
+              <button
+                id="calculateBtnPanel1"
+                style="
+                  flex: 1;
+                  background-color: #1976d2;
+                  color: white;
+                  padding: 12px;
+                  border: none;
+                  border-radius: 4px;
+                  cursor: pointer;
+                "
+              >
+                CALCULAR SUBREDES
+              </button>
+              <button
+                id="clearBtnPanel1"
+                style="
+                  flex: 1;
+                  padding: 12px;
+                  border: 1px solid #d1d5db;
+                  border-radius: 4px;
+                  cursor: pointer;
+                "
+              >
+                LIMPIAR
+              </button>
+            </div>
+          </div>
+
+          <!-- Aquí se va a mostrar la tabla -->
+          <div
+            id="resultsPanel1"
+            style="
+              margin-top: 20px;
+              max-width: 1000px;
+              margin-left: auto;
+              margin-right: auto;
+            "
+          ></div>
         </div>
+
         <div v-else-if="activePanel === 'panel2'">
           <h6>Panel 2</h6>
           <div class="container">
@@ -237,6 +369,10 @@ export default {
             "DArio puto: activePanel es 'panel2', re-inicializando lógica del DOM"
           );
           this.initializePanel2Logic();
+        });
+      } else if (newValue === "panel1") {
+        this.$nextTick(() => {
+          this.initializePanel1Logic();
         });
       }
     },
@@ -446,6 +582,144 @@ export default {
         errorAlert.textContent = "";
         resultsBody.innerHTML = "";
         resultsCard.style.display = "none";
+      });
+    },
+    initializePanel1Logic() {
+      console.log("Inicializando lógica de Panel 1");
+
+      const ipInput = document.getElementById("ipBasePanel1");
+      const maskInput = document.getElementById("maskPanel1");
+      const subnetsInput = document.getElementById("numSubnetsPanel1");
+      const calculateBtn = document.getElementById("calculateBtnPanel1");
+      const clearBtn = document.getElementById("clearBtnPanel1");
+      const resultsDiv = document.getElementById("resultsPanel1");
+
+      function ipToNumber(ip) {
+        return (
+          ip
+            .split(".")
+            .reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0) >>> 0
+        );
+      }
+
+      function numberToIp(num) {
+        return [
+          num >>> 24,
+          (num >>> 16) & 255,
+          (num >>> 8) & 255,
+          num & 255,
+        ].join(".");
+      }
+
+      function isValidIp(ip) {
+        const parts = ip.split(".");
+        return (
+          parts.length === 4 &&
+          parts.every((p) => {
+            const n = parseInt(p, 10);
+            return n >= 0 && n <= 255;
+          })
+        );
+      }
+
+      calculateBtn.addEventListener("click", () => {
+        console.log("Calculando subredes básicas");
+
+        resultsDiv.innerHTML = "";
+
+        if (!isValidIp(ipInput.value)) {
+          resultsDiv.innerHTML = `<p style="color:red;">Formato de IP inválido</p>`;
+          return;
+        }
+
+        const maskNum = parseInt(maskInput.value, 10);
+        const subnetsNum = parseInt(subnetsInput.value, 10);
+
+        if (isNaN(maskNum) || maskNum < 1 || maskNum > 30) {
+          resultsDiv.innerHTML = `<p style="color:red;">Máscara debe ser entre 1 y 30</p>`;
+          return;
+        }
+        if (isNaN(subnetsNum) || subnetsNum < 1 || subnetsNum > 256) {
+          resultsDiv.innerHTML = `<p style="color:red;">Número de subredes inválido</p>`;
+          return;
+        }
+
+        const baseIp = ipToNumber(ipInput.value);
+        const totalAddresses = Math.pow(2, 32 - maskNum);
+        const addressesPerSubnet = Math.floor(totalAddresses / subnetsNum);
+
+        if (addressesPerSubnet < 4) {
+          resultsDiv.innerHTML = `<p style="color:red;">Demasiadas subredes para esta máscara. Cada subred debe tener al menos 4 direcciones (red, router, al menos 1 host y broadcast).</p>`;
+          return;
+        }
+
+        let currentAddress = baseIp;
+
+        let table = `
+          <table>
+            <thead>
+              <tr>
+                <th>Subred</th>
+                <th>Dir Inicio</th>
+                <th>Dir Final</th>
+                <th>Broadcast</th>
+                <th>Dir Router</th>
+                <th>Primera Dirección de Equipo</th>
+                <th>Última Dirección de Equipo</th>
+                <th>Total Hosts para Equipos</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        for (let i = 0; i < subnetsNum; i++) {
+          const netAddr = currentAddress;
+          const broadcastAddr = currentAddress + addressesPerSubnet - 1;
+          const routerAddr = netAddr + 1;
+          const firstEquipAddr = routerAddr + 1;
+          const lastEquipAddr = broadcastAddr - 1;
+          const usableForEquipos = addressesPerSubnet - 2 - 1; // red + broadcast + router
+
+          const primeraEquipIp =
+            usableForEquipos > 0 ? numberToIp(firstEquipAddr) : "N/A";
+          const ultimaEquipIp =
+            usableForEquipos > 0 ? numberToIp(lastEquipAddr) : "N/A";
+          const totalEquipos = usableForEquipos > 0 ? usableForEquipos : 0;
+
+          table += `
+            <tr>
+              <td class="center">${i + 1}</td>
+              <td class="font-mono">${numberToIp(netAddr)}</td>
+              <td class="font-mono">${numberToIp(broadcastAddr)}</td>
+              <td class="font-mono">${numberToIp(broadcastAddr)}</td>
+              <td class="font-mono">${numberToIp(routerAddr)}</td>
+              <td class="font-mono">${primeraEquipIp}</td>
+              <td class="font-mono">${ultimaEquipIp}</td>
+              <td class="center">${totalEquipos}</td>
+            </tr>
+          `;
+
+          currentAddress += addressesPerSubnet;
+        }
+
+        table += `
+            </tbody>
+          </table>
+        `;
+
+        resultsDiv.innerHTML = `
+          <div class="table-container">
+            ${table}
+          </div>
+        `;
+      });
+
+      clearBtn.addEventListener("click", () => {
+        console.log("Limpiar formulario Panel 1");
+        ipInput.value = "";
+        maskInput.value = "";
+        subnetsInput.value = "";
+        resultsDiv.innerHTML = "";
       });
     },
   },
