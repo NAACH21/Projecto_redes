@@ -9,9 +9,9 @@
         class="input"
         type="text"
         v-model="ipInput"
-        placeholder="Ingresa una dirección IPv4 o IPv6"
+        placeholder="Ingresa una dirección IPv4"
       />
-      <p class="helper-text">Ejemplo: 192.168.0.1 o ::1</p>
+      <p class="helper-text">Ejemplo: 192.168.0.1</p>
     </div>
 
     <div class="buttons">
@@ -32,7 +32,12 @@
     <transition name="fade">
       <div v-if="conversionResult" class="alert alert-success">
         <h3>Resultado:</h3>
-        <p>{{ conversionResult }}</p>
+        <p><strong>IPv4 Original:</strong> {{ ipInput }}</p>
+        <p><strong>IPv6 Mapeado:</strong> {{ conversionResult.ipv6Mapped }}</p>
+        <p><strong>Forma Expandida:</strong> {{ conversionResult.expanded }}</p>
+        <p>
+          <strong>Forma Comprimida:</strong> {{ conversionResult.compressed }}
+        </p>
       </div>
     </transition>
   </div>
@@ -150,7 +155,7 @@ export default {
   data() {
     return {
       ipInput: "",
-      conversionResult: "",
+      conversionResult: null,
       errorMessage: "",
     };
   },
@@ -172,18 +177,6 @@ export default {
       }
       return { valid: true };
     },
-    validateIPv6(ip) {
-      const pattern =
-        /^([0-9a-f]{1,4}:){1,7}[0-9a-f]{1,4}$|^::(?:[0-9a-f]{1,4}:){0,5}[0-9a-f]{1,4}$|^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i;
-      if (!pattern.test(ip)) {
-        return {
-          valid: false,
-          error:
-            "Formato inválido. Comprueba los bloques y los separadores (:).",
-        };
-      }
-      return { valid: true };
-    },
     convertToIPv6() {
       this.clearMessages();
       const validation = this.validateIPv4(this.ipInput);
@@ -194,34 +187,24 @@ export default {
       const parts = this.ipInput
         .split(".")
         .map((part) => parseInt(part).toString(16).padStart(2, "0"));
-      const ipv6 = `::ffff:${parts[0]}${parts[1]}:${parts[2]}${parts[3]}`;
-      this.conversionResult = ipv6;
+
+      const ipv6Mapped = `::ffff:${parts[0]}${parts[1]}:${parts[2]}${parts[3]}`;
+      const expanded = `0000:0000:0000:0000:0000:ffff:${parts[0]}${parts[1]}:${parts[2]}${parts[3]}`;
+      const compressed = `::ffff:${parts[0]}${parts[1]}:${parts[2]}${parts[3]}`;
+
+      this.conversionResult = {
+        ipv6Mapped,
+        expanded,
+        compressed,
+      };
     },
     convertToIPv4() {
       this.clearMessages();
-      const validation = this.validateIPv6(this.ipInput);
-      if (!validation.valid) {
-        this.errorMessage = validation.error;
-        return;
-      }
-
-      const match = this.ipInput.match(
-        /^::ffff:([0-9a-f]{2})([0-9a-f]{2}):([0-9a-f]{2})([0-9a-f]{2})$/i
-      );
-      if (!match) {
-        this.errorMessage =
-          "Formato de IPv6 no convertible a IPv4 o dirección inválida.";
-        return;
-      }
-
-      const ipv4 = match
-        .slice(1)
-        .map((part) => parseInt(part, 16))
-        .join(".");
-      this.conversionResult = ipv4;
+      this.errorMessage =
+        "Conversión de IPv6 a IPv4 no implementada en esta versión.";
     },
     clearMessages() {
-      this.conversionResult = "";
+      this.conversionResult = null;
       this.errorMessage = "";
     },
   },
