@@ -16,10 +16,10 @@
 
     <div class="buttons">
       <button class="button ipv6" @click="convertToIPv6">
-        Convertir a IPv6
+        <span class="button-icon">🌐</span> Convertir a IPv6
       </button>
       <button class="button ipv4" @click="convertToIPv4">
-        Convertir a IPv4
+        <span class="button-icon">🌍</span> Convertir a IPv4
       </button>
     </div>
 
@@ -44,50 +44,69 @@
 </template>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@300;400;600&display=swap");
 
 .container {
   max-width: 700px;
   margin: 50px auto;
-  padding: 30px;
+  padding: 40px;
   text-align: center;
   border-radius: 15px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: rgba(
+    115,
+    119,
+    255,
+    0.9
+  ); /* Fondo blanco con algo de transparencia */
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
+  width: 100%; /* Asegura que el contenedor ocupe el 100% del espacio disponible */
 }
 
+/* Título */
 .title {
-  font-size: 2.5rem;
-  color: #fff;
-  margin-bottom: 10px;
+  font-size: 5rem;
+  font-weight: 900; /* Mayor peso para el título */
+  color: #000000;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px; /* Añadir espacio entre letras para un estilo más moderno */
+  font-family: "Poppins", sans-serif;
 }
 
+/* Subtítulo */
 .subtitle {
-  color: #f0f0f0;
-  margin-bottom: 25px;
+  color: #4f4f4f;
+  font-size: 1.25rem;
+  margin-bottom: 30px;
+  font-weight: 400;
 }
 
+/* Grupo del formulario */
 .form-group {
   margin-bottom: 20px;
 }
 
+/* Estilo de la caja de texto */
 .input {
-  width: 100%;
+  width: 80%; /* Ajusta el tamaño del campo de texto */
   padding: 15px;
   border: none;
   border-radius: 10px;
   font-size: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   outline: none;
+  font-family: "Poppins", sans-serif;
+  display: block; /* Asegura que el input sea un bloque */
+  margin: 0 auto; /* Esto centra el input horizontalmente */
 }
 
 .helper-text {
-  margin-top: 5px;
+  margin-top: 20px;
   font-size: 0.9rem;
-  color: #f0f0f0;
+  color: #777;
 }
 
+/* Estilo de los botones */
 .buttons {
   display: flex;
   justify-content: space-around;
@@ -95,13 +114,21 @@
 }
 
 .button {
-  padding: 15px 25px;
-  font-size: 1rem;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   color: #fff;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+}
+
+.button-icon {
+  margin-right: 8px;
 }
 
 .button.ipv6 {
@@ -120,11 +147,13 @@
   background-color: #2563eb;
 }
 
+/* Estilo de los mensajes de alerta */
 .alert {
   margin-top: 20px;
   padding: 15px;
   border-radius: 10px;
   font-size: 1rem;
+  font-weight: 500;
 }
 
 .alert-success {
@@ -143,6 +172,7 @@
 .fade-leave-active {
   transition: opacity 0.5s;
 }
+
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
@@ -171,7 +201,7 @@ export default {
         if (isNaN(parts[i]) || parts[i] < 0 || parts[i] > 255) {
           return {
             valid: false,
-            error: `El bloque ${i + 1} (${parts[i]}) es inválido.`,
+            error: `El bloque ${i + 1} (${parts[i]}) es invál.`,
           };
         }
       }
