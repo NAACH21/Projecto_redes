@@ -160,7 +160,7 @@ export default {
       if (parts.length !== 4)
         return {
           valid: false,
-          error: "Debe contener 4 bloques separados por puntos.",
+          error: "Debe contener 4 bloques separados por puntos",
         };
       for (let i = 0; i < parts.length; i++) {
         if (isNaN(parts[i]) || parts[i] < 0 || parts[i] > 255) {
