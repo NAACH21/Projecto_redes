@@ -43,9 +43,12 @@
               align-items: center;
               gap: 8px;
               margin-bottom: 20px;
+              text-align: center;
+              justify-content: center;
             "
           >
             <svg
+              style="color: snow"
               xmlns="http://www.w3.org/2000/svg"
               class="icon"
               fill="none"
@@ -61,12 +64,10 @@
                 d="M3 10h4l3 9 4-18 3 9h4"
               />
             </svg>
-            <h1 style="font-size: 1.5rem; font-weight: bold">
+            <h1 style="font-size: 1.5rem; font-weight: bold; color: snow">
               Calculadora de Subredes Básica
             </h1>
           </div>
-
-          <!-- Card del formulario -->
           <div
             style="
               background-color: #fff;
@@ -78,7 +79,6 @@
               margin: auto;
             "
           >
-            <!-- Primera fila: inputs -->
             <div style="display: flex; gap: 12px; margin-bottom: 16px">
               <div style="flex: 1">
                 <label>Dirección IP:</label>
@@ -128,7 +128,6 @@
               </div>
             </div>
 
-            <!-- Segunda fila: botones -->
             <div style="display: flex; gap: 12px; margin-bottom: 16px">
               <button
                 id="calculateBtnPanel1"
@@ -158,8 +157,6 @@
               </button>
             </div>
           </div>
-
-          <!-- Aquí se va a mostrar la tabla -->
           <div
             id="resultsPanel1"
             style="
@@ -172,9 +169,8 @@
         </div>
 
         <div v-else-if="activePanel === 'panel2'">
-          <h6>Panel 2</h6>
+          <!-- <h6>Panel 2</h6> -->
           <div class="container">
-            <!-- Header -->
             <div class="header">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -308,7 +304,7 @@
                     </li>
                     <li>
                       <strong>Hosts por Subred:</strong> Cantidad específica de
-                      hosts para cada subred (VLSM)
+                      hosts para cada subred
                     </li>
                   </ul>
                 </div>
@@ -761,16 +757,17 @@ body {
   margin-right: 8px;
   width: 32px;
   height: 32px;
-  stroke: #2563eb;
+  stroke: snow;
 }
 .header h1 {
   display: inline-block;
   font-size: 2rem;
   font-weight: bold;
   vertical-align: middle;
+  color: snow;
 }
 .header p {
-  color: #475569;
+  color: snow;
   margin-top: 4px;
 }
 /* Tarjetas y diseños */
@@ -862,5 +859,33 @@ td.center {
 }
 .font-mono {
   font-family: monospace;
+}
+main.q-page {
+  background: linear-gradient(to right, #754ca3, #667de9);
+}
+.q-toolbar {
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.q-toolbar__title {
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+}
+
+.q-btn {
+  transition: all 0.3s ease;
+}
+
+.q-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px rgba(0, 255, 150, 0.6);
 }
 </style>
