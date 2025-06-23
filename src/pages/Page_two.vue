@@ -722,7 +722,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 *,
 *::before,
 *::after {

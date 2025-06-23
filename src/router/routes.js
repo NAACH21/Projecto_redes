@@ -2,7 +2,7 @@ const routes = [
   {
     path: "/",
     component: () => import("pages/Page_prin.vue"),
-    children: [{ path: "", component: () => import("pages/Page_prin.vue") }],
+    // children: [{ path: "", component: () => import("pages/Page_prin.vue") }],
   },
 
   // Always leave this as last one,
