@@ -19,9 +19,10 @@
       <div class="hero-right">
         <h1>CONVERTIR IPV4 A IPV6</h1>
         <p>
-          Esta herramienta transforma direcciones IPv4 tradicionales en su representación IPv6 equivalente,
-          aplicando el formato IPv4-mapped, preservando compatibilidad, expandiendo espacio de red y
-          facilitando la adopción del protocolo de próxima generación.
+          Esta herramienta transforma direcciones IPv4 tradicionales en su
+          representación IPv6 equivalente, aplicando el formato IPv4-mapped,
+          preservando compatibilidad, expandiendo espacio de red y facilitando
+          la adopción del protocolo de próxima generación.
         </p>
         <a
           href="https://www.cisco.com/c/en/us/support/docs/ip/routing-information-protocol-rip/13788-3.html"
@@ -37,7 +38,10 @@
     <!-- Wave Separator with neon animation -->
     <div class="wave">
       <svg viewBox="0 0 1200 100" preserveAspectRatio="none">
-        <path class="wave-path" d="M0,30 C300,100 900,0 1200,30 L1200,100 L0,100 Z" />
+        <path
+          class="wave-path"
+          d="M0,30 C300,100 900,0 1200,30 L1200,100 L0,100 Z"
+        />
       </svg>
     </div>
 
@@ -46,9 +50,9 @@
       <div class="hero-right">
         <h1>GENERADOR DE SUBREDES</h1>
         <p>
-          Genera automáticamente subredes óptimas: calcula máscara, rango de hosts,
-          direcciones broadcast y wildcard, mostrando asignación eficiente de bloques para
-          planificar redes internas IPv4 e IPv6.
+          Genera automáticamente subredes óptimas: calcula máscara, rango de
+          hosts, direcciones broadcast y wildcard, mostrando asignación
+          eficiente de bloques para planificar redes internas IPv4 e IPv6.
         </p>
         <a
           href="https://study-ccna.com/subnetting-explained/"
@@ -69,87 +73,99 @@
 </template>
 
 <script>
-import primerGif from '../assets/primer.gif'
-import segundoGif from '../assets/segundo.gif'
-import LogoDoraemon from 'components/LogoDoraemon.vue'
+import primerGif from "../assets/primer.gif";
+import segundoGif from "../assets/segundo.gif";
+import LogoDoraemon from "components/LogoDoraemon.vue";
 
 export default {
-  name: 'PrincipalPage',
+  name: "PrincipalPage",
   components: { LogoDoraemon },
   data() {
-    return { primerGif, segundoGif }
+    return { primerGif, segundoGif };
   },
   mounted() {
     // Scroll Progress Bar neon effect
-    const prog = document.getElementById('scroll-progress')
-    window.addEventListener('scroll', () => {
-      const doc = document.documentElement
-      const pct = (window.scrollY / (doc.scrollHeight - doc.clientHeight)) * 100
-      prog.style.width = pct + '%'
-    })
+    const prog = document.getElementById("scroll-progress");
+    window.addEventListener("scroll", () => {
+      const doc = document.documentElement;
+      const pct =
+        (window.scrollY / (doc.scrollHeight - doc.clientHeight)) * 100;
+      prog.style.width = pct + "%";
+    });
 
     // Scroll animation: first container
-    const hero = this.$el.querySelector('.hero')
-    const maxOffset = 50
-    window.addEventListener('scroll', () => {
+    const hero = this.$el.querySelector(".hero");
+    const maxOffset = 50;
+    window.addEventListener("scroll", () => {
       window.requestAnimationFrame(() => {
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop
+        const scrollY =
+          window.pageYOffset || document.documentElement.scrollTop;
         if (scrollY === 0) {
-          hero.style.opacity = '1'
-          hero.style.transform = 'translateY(0)'
-          return
+          hero.style.opacity = "1";
+          hero.style.transform = "translateY(0)";
+          return;
         }
-        const rect = hero.getBoundingClientRect()
-        const winH = window.innerHeight
-        let prog = (winH - rect.top) / (winH + rect.height)
-        prog = Math.min(Math.max(prog, 0), 1)
-        hero.style.opacity = 1 - prog
-        hero.style.transform = `translateY(${prog * maxOffset}px)`
-      })
-    })
+        const rect = hero.getBoundingClientRect();
+        const winH = window.innerHeight;
+        let prog = (winH - rect.top) / (winH + rect.height);
+        prog = Math.min(Math.max(prog, 0), 1);
+        hero.style.opacity = 1 - prog;
+        hero.style.transform = `translateY(${prog * maxOffset}px)`;
+      });
+    });
 
     // Scroll animation: second container
-    const heroSecond = this.$el.querySelector('.hero-second')
-    const maxOffsetSecond = 50
-    const heightSecond = heroSecond.getBoundingClientRect().height
+    const heroSecond = this.$el.querySelector(".hero-second");
+    const maxOffsetSecond = 50;
+    const heightSecond = heroSecond.getBoundingClientRect().height;
     const onScrollSecond = () => {
-      const rect = heroSecond.getBoundingClientRect()
-      const winH = window.innerHeight
-      const visibleHeight = Math.min(rect.bottom, winH) - Math.max(rect.top, 0)
-      const ratio = Math.min(Math.max(visibleHeight / heightSecond, 0), 1)
-      heroSecond.style.opacity = ratio
-      heroSecond.style.transform = `translateY(${(1 - ratio) * maxOffsetSecond}px)`
-    }
-    window.addEventListener('scroll', () => window.requestAnimationFrame(onScrollSecond))
-    onScrollSecond()
+      const rect = heroSecond.getBoundingClientRect();
+      const winH = window.innerHeight;
+      const visibleHeight = Math.min(rect.bottom, winH) - Math.max(rect.top, 0);
+      const ratio = Math.min(Math.max(visibleHeight / heightSecond, 0), 1);
+      heroSecond.style.opacity = ratio;
+      heroSecond.style.transform = `translateY(${
+        (1 - ratio) * maxOffsetSecond
+      }px)`;
+    };
+    window.addEventListener("scroll", () =>
+      window.requestAnimationFrame(onScrollSecond)
+    );
+    onScrollSecond();
 
     // 3D tilt on yellow boxes
-    this.$el.querySelectorAll('.yellow-box').forEach(box => {
-      box.addEventListener('mousemove', e => {
-        const rect = box.getBoundingClientRect()
-        const x = e.clientX - rect.left
-        const y = e.clientY - rect.top
-        const cx = rect.width / 2
-        const cy = rect.height / 2
-        const maxDeg = 15
-        const dx = (x - cx) / cx
-        const dy = (y - cy) / cy
-        box.style.transform = `rotateX(${dy * maxDeg}deg) rotateY(${-dx * maxDeg}deg)`
-      })
-      box.addEventListener('mouseleave', () => {
-        box.style.transform = 'rotateX(0deg) rotateY(0deg)'
-      })
-    })
-  }
-}
+    this.$el.querySelectorAll(".yellow-box").forEach((box) => {
+      box.addEventListener("mousemove", (e) => {
+        const rect = box.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const maxDeg = 15;
+        const dx = (x - cx) / cx;
+        const dy = (y - cy) / cy;
+        box.style.transform = `rotateX(${dy * maxDeg}deg) rotateY(${
+          -dx * maxDeg
+        }deg)`;
+      });
+      box.addEventListener("mouseleave", () => {
+        box.style.transform = "rotateX(0deg) rotateY(0deg)";
+      });
+    });
+  },
+};
 </script>
 
-<style >
+<style>
 /* IMPORTAR FUENTE ORBITRON */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
 
 /* RESET */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 /* Variables */
 :root {
@@ -173,9 +189,15 @@ body {
   padding-top: 60px;
 }
 @keyframes hueShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Scroll Progress Bar neon */
@@ -214,7 +236,9 @@ body {
   animation: neonFlow 3s linear infinite;
 }
 @keyframes neonFlow {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Navbar */
@@ -223,92 +247,150 @@ body {
   align-items: center;
   justify-content: flex-start;
   padding: 1rem 2rem;
-  position: fixed; top: 0; left: 0;
-  width: 100%; background-color: var(--bg);
-  z-index: 1000; height: 70px; line-height: 70px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--bg);
+  z-index: 1000;
+  height: 70px;
+  line-height: 70px;
 }
 .navbar .logo {
-  margin-left: 0.75rem; font-size: 1.25rem; font-weight: bold;
+  margin-left: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 
 /* Hero containers */
 .hero {
-  opacity: 1; transform: translateY(0);
+  opacity: 1;
+  transform: translateY(0);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  display: flex; align-items: flex-start; justify-content: center;
-  padding: 3rem 1rem; gap: 3rem; min-height: 100vh; perspective: 1000px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 1rem;
+  gap: 3rem;
+  min-height: 100vh;
+  perspective: 1000px;
 }
 .hero-second {
-  display: flex; align-items: flex-start; justify-content: center;
-  padding: 2rem; gap: 3rem;
-  opacity: 0; transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out; perspective: 1000px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
+  gap: 3rem;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  perspective: 1000px;
 }
 
 /* Yellow boxes */
 .yellow-box {
-  position: relative; overflow: hidden; width: 450px; height: 550px;
-  background-color: var(--yellow-box); border-radius: 8px;
-  transform-style: preserve-3d; transition: transform 0.2s ease-out;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  position: relative;
+  overflow: hidden;
+  width: 450px;
+  height: 550px;
+  background-color: var(--yellow-box);
+  border-radius: 8px;
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 .yellow-box__gif {
-  position: absolute; top: 0; left: 0; right: 0;
-  width: 100%; height: 100%; object-fit: cover; z-index: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 .btn-listen {
-  position: absolute; bottom: 20px; left: 50%;
-  transform: translateX(-50%); background-color: rgba(0,0,0,0.6);
-  text-decoration: none; border-radius: 4px; font-weight: bold;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
 }
 
 /* Texto */
-.hero-right { max-width: 500px; display: flex; flex-direction: column; }
+.hero-right {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+}
 
 /* Encabezados TECH con gradiente animado */
 .hero-right h1 {
-  font-family: 'Orbitron', sans-serif; font-size: 3rem; margin-bottom: 0.5rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
   background: linear-gradient(90deg, #00eaff, #ff0099, #00eaff);
-  background-size: 200% 200%; -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; animation: gradientShift 5s ease infinite;
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 5s ease infinite;
   transition: transform 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 .hero-right h1:hover {
   transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3); color: var(--title-hover);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  color: var(--title-hover);
 }
 @keyframes gradientShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Párrafo y botones */
 .hero-right p {
-  font-size: 1.25rem; color: var(--text-dark); margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
   transition: color 0.3s ease;
 }
-.hero-right p:hover { color: var(--text-hover); }
+.hero-right p:hover {
+  color: var(--text-hover);
+}
 
 .btn-spotify {
-  margin-top: auto; display: inline-block; text-align: center;
-  background-color: var(--primary); text-decoration: none;
-  border-radius: 4px; font-weight: bold;
+  margin-top: auto;
+  display: inline-block;
+  text-align: center;
+  background-color: var(--primary);
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
 }
 
 /* Neón y reflejo en botones */
 .btn-listen,
 .btn-spotify {
-  color: var(--neon); padding: 10px 30px; font-size: 1.35rem;
+  color: var(--neon);
+  padding: 10px 30px;
+  font-size: 1.35rem;
 }
 .btn-listen:hover,
 .btn-spotify:hover {
-  background-color: var(--neon); color: #050801;
-  box-shadow: 0 0   5px var(--neon),
-              0 0  25px var(--neon),
-              0 0  50px var(--neon),
-              0 0 300px var(--neon);
-  -webkit-box-reflect: above 1px linear-gradient(transparent,#0005);
+  background-color: var(--neon);
+  color: #050801;
+  box-shadow: 0 0 5px var(--neon), 0 0 25px var(--neon), 0 0 50px var(--neon),
+    0 0 300px var(--neon);
+  -webkit-box-reflect: above 1px linear-gradient(transparent, #0005);
 }
 
 /* Ocultar scrollbar nativo (derecho) sin afectar #scroll-progress */

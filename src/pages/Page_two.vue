@@ -243,6 +243,7 @@
                   font-size: 1.25rem;
                   font-weight: 600;
                   margin-bottom: 16px;
+                  clear: black;
                 "
               >
                 Resultados de Subredes
@@ -350,6 +351,11 @@ export default {
   },
   mounted() {
     console.log("DArio puto: Componente montado");
+    // Inicializamos siempre el Panel 1
+    this.$nextTick(() => {
+      this.initializePanel1Logic();
+    });
+    // Y si al montar ya estás en Panel2, también lo inicializas
     if (this.activePanel === "panel2") {
       this.initializePanel2Logic();
     }
@@ -887,5 +893,56 @@ main.q-page {
 .q-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 8px rgba(0, 255, 150, 0.6);
+}
+</style>
+<style>
+/* ===== Contenedor ===== */
+.table-container {
+  margin: 1rem 0;
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Tabla ===== */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: #2e3a46;
+}
+
+/* ===== Encabezados ===== */
+.table-container table thead th {
+  padding: 0.5rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #4a5568;
+  border-bottom: 1px solid #e2e8f0;
+  background: transparent;
+}
+
+/* ===== Celdas ===== */
+.table-container table tbody td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Quitar la línea en la última fila */
+.table-container table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Hover muy sutil */
+.table-container table tbody tr:hover {
+  background-color: #fafbfc;
+}
+
+/* Centrar sólo donde uses la clase .center */
+.table-container table th.center,
+.table-container table td.center {
+  text-align: center;
 }
 </style>
